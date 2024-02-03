@@ -186,7 +186,7 @@ import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
 //import H1Title from '@/components/content-components/titles/H1Title.vue';
 
 import { ref } from 'vue';
-import { useAuthStore } from '../store/auth';
+import { useAuthStore } from '../stores/auth';
 
 const authStore = useAuthStore();
 
