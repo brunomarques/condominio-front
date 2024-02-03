@@ -1,60 +1,29 @@
-<template>
-  <nav class="dark:bg-gray-600 dark:text-gray-700">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/fullcalendar">Full Calendar</router-link>
-  </nav>
-
-  <div class="container mx-auto">
-    <router-view/>
-
-    <button @click="toggleDark()" class="px-4 py-2 text-white bg-gray-600 dark:bg-purple-700">
-        Dark Toggle
-    </button>
-  </div>
-</template>
-
 <script setup>
-  import { onMounted } from "vue";
-  import { Tooltip, Carousel, initTE } from "tw-elements";
-  import { initModals, } from 'flowbite';
+import { onMounted } from 'vue';
 
-  import { useDark, useToggle } from '@vueuse/core';
+import { initFlowbite } from 'flowbite';
+import { initTE, Ripple } from 'tw-elements';
 
-  onMounted(() => {
-    //Tailwind Elements
-    initTE({
-      Tooltip,
-      Carousel
-    });
+import NavBar from './components/content-components/NavBar.vue';
 
-    //Tailwind Flowbite
-    initModals();
+onMounted(() => {
+  //Tailwind Elements
+  initTE({
+    Ripple,
   });
 
-  const isDark = useDark();
-  const toggleDark = useToggle(isDark);
+  //Tailwind Flowbite
+  initFlowbite();
+});
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<template>
+  <NavBar />
+  <div class="absolute inset-0 z-0 bg-grid-body bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
 
-nav {
-  padding: 30px;
+  <router-view />
+</template>
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+<style scoped>
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
