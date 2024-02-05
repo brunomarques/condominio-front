@@ -47,6 +47,8 @@ export const useAuthStore = defineStore('auth', {
                     this.authUser = response.data.data;
                     this.authToken = response.data.access_token;
 
+                    $cookies.set('_condominio_token', response.data.access_token);
+
                     this.router.push('dashboard');
                 });
                 //to sanctum
@@ -98,6 +100,7 @@ export const useAuthStore = defineStore('auth', {
                 .then(() => {
                     this.authUser = null;
                     this.router.push({ name: 'login' });
+                    $cookies.remove('_condominio_token');
                 });
 
         },
