@@ -149,93 +149,65 @@
             <div class="max-w-md w-full p-6">
                 <h1 class="text-3xl font-semibold mb-6 text-black text-center dark:text-gray-300">Condomíno Vista do Sol</h1>
 
-                <h2 class="text-2xl font-semibold mb-6 text-gray-500 text-center dark:text-gray-300">Faça o seu cadastro por</h2>
+                <h2 class="text-2xl font-semibold mb-6 text-gray-500 text-center dark:text-gray-300">Faça o seu cadastro</h2>
 
-                <div class=" mt-4 flex flex-col lg:flex-row gap-4 justify-center items-center text-center">
+                <AlertMsgBasic v-if="responseErrors" :title="'Error!'" :color="'red'">
+                    {{ responseErrors }}
+                </AlertMsgBasic>
+
+                <form validate-schema="validationSchema" class="space-y-4" @submit.prevent="doSubmit" novalidate>
                     <div>
-                        <button type="button"
-                            class="text-red-700 border border-red-700 hover:bg-red-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800 dark:hover:bg-red-500 transition duration-150 shadow-md hover:shadow-red-800 dark:hover:shadow-red-600"
-                            @click="loginGoogle">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
-                                <path fill-rule="evenodd"
-                                    d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="sr-only">Sign in with Google</span>
-                        </button>
+                        <LabelComponent for="name">Nome completo:</LabelComponent>
+                        <InputBasic v-model="name" v-bind="nameAttrs" type="text" id="name" name="name" required placeholder="John Doe" :class="errorNameClass" />
+                        <span v-if="errCode && errCode === 401" name="name" class="text-sm text-red-600 dark:text-red-800">{{ errors.name }}</span>
+                        <span v-else-if="errCode && errCode === 422" name="name" class="text-sm text-red-600 dark:text-red-800">
+                            <ul>
+                                <li v-for="(errName, index) in listErrors.name" :key="index">{{ errName }}</li>
+                            </ul>
+                        </span>
+                        <span v-else name="name" class="text-sm text-red-600 dark:text-red-800">{{ errors.name }}</span>
                     </div>
 
                     <div>
-                        <button type="button"
-                            class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 transition duration-150 shadow-md hover:shadow-blue-800 dark:hover:shadow-blue-600"
-                            disabled>
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 8 19">
-                                <path fill-rule="evenodd" d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="sr-only">Sign in with Meta Facebook</span>
-                        </button>
+                        <LabelComponent for="email">Seu e-mail:</LabelComponent>
+                        <InputBasic v-model="email" v-bind="emailAttrs" type="email" id="email" name="email" required placeholder="email@email.com" :class="errorEmailClass" />
+                        <span v-if="errCode && errCode === 401" name="email" class="text-sm text-red-600 dark:text-red-800">{{ errors.email }}</span>
+                        <span v-else-if="errCode && errCode === 422" name="email" class="text-sm text-red-600 dark:text-red-800">
+                            <ul>
+                                <li v-for="(errMail, index) in listErrors.email" :key="index">{{ errMail }}</li>
+                            </ul>
+                        </span>
+                        <span v-else name="email" class="text-sm text-red-600 dark:text-red-800">{{ errors.email }}</span>
                     </div>
 
                     <div>
-                        <button type="button"
-                            class="text-gray-700 border border-gray-700 hover:bg-gray-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-gray-500 dark:text-gray-500 dark:hover:text-white dark:focus:ring-gray-800 dark:hover:bg-gray-500 transition duration-150 shadow-md hover:shadow-gray-800 dark:hover:shadow-gray-600"
-                            @click="loginX">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 17">
-                                <path fill-rule="evenodd"
-                                    d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="sr-only">Sign in with X</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <h3 class="text-1xl font-semibold mb-6 text-gray-500 text-center dark:text-gray-300">ou crie um login e senha</h3>
-                </div>
-
-                <form action="#" method="POST" class="space-y-4" @submit.prevent="authStore.register(form)" novalidate>
-                    <div>
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seu Nome</label>
-                        <input type="name" name="name" id="name"
-                            class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                            placeholder="John Doe" required v-model="form.name">
-                        <div v-if="authStore.errors.name" class="text-xs text-red-600 dark:text-red-400 font-semibold">
-                            {{ authStore.errors.name[0] }}
-                        </div>
+                        <LabelComponent for="password">Sua senha:</LabelComponent>
+                        <InputBasic v-model="password" v-bind="passwordAttrs" type="password" id="password" name="password" required placeholder="••••••••" :class="errorPassClass" />
+                        <span v-if="errCode && errCode === 401" name="password" class="text-sm text-red-600 dark:text-red-800">{{ errors.password }}</span>
+                        <span v-else-if="errCode && errCode === 422" name="password" class="text-sm text-red-600 dark:text-red-800">
+                            <ul>
+                                <li v-for="(errPass, index) in listErrors.password" :key="index">{{ errPass }}</li>
+                            </ul>
+                        </span>
+                        <span v-else name="password" class="text-sm text-red-600 dark:text-red-800">{{ errors.password }}</span>
                     </div>
 
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
-                        <input type="email" name="email" id="email"
-                            class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                            placeholder="email@email.com" required v-model="form.email">
-                        <div v-if="authStore.errors.email" class="text-xs text-red-600 dark:text-red-400 font-semibold">
-                            {{ authStore.errors.email[0] }}
-                        </div>
-                    </div>
-                    <!--InputBasic :type="'email'" :required="true" :label="'Seu e-mail:'" :id="'email'" :name="'email'" :placeholder="'email@email.com'" v-model="email" /-->
-
-                    <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                        <input type="password" name="password" id="password"
-                            class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                            placeholder="••••••••" required v-model="form.password">
-                        <div v-if="authStore.errors.email" class="text-xs text-red-600 dark:text-red-400 font-semibold">
-                            {{ authStore.errors.password[0] }}
-                        </div>
-                    </div>
-                    <!--InputBasic :type="'password'" :required="true" :label="'Sua senha:'" :id="'password'" :name="'password'" :placeholder="'••••••••'" v-model="password" /-->
-
-                    <div>
-                        <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirme o Password</label>
-                        <input type="password" name="confirm-password" id="confirm-password"
-                            class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                            placeholder="••••••••" required v-model="form.password_confirmation">
+                        <LabelComponent for="password_confirmation">Confirme a senha:</LabelComponent>
+                        <InputBasic v-model="password_confirmation" v-bind="password_confirmationAttrs" type="password" id="password_confirmation" name="password_confirmation" required placeholder="••••••••" :class="errorPassConfirmClass" />
+                        <span v-if="errCode && errCode === 401" name="password_confirmation" class="text-sm text-red-600 dark:text-red-800">{{ errors.password_confirmation }}</span>
+                        <span v-else-if="errCode && errCode === 422" name="password_confirmation" class="text-sm text-red-600 dark:text-red-800">
+                            <ul>
+                                <li v-for="(errPassConfirm, index) in listErrors.password_confirmation" :key="index">{{ errPassConfirm }}</li>
+                            </ul>
+                        </span>
+                        <span v-else name="password_confirmation" class="text-sm text-red-600 dark:text-red-800">{{ errors.password_confirmation }}</span>
                     </div>
 
-                    <ButtonBasic :type="'submit'" :text="'Registrar'" :color="'blue'" />
+                    <ButtonBasic :disabled="disabledBtn" :type="'submit'" :color="'blue'">
+                        <SpinnerIcon v-if="disabledBtn" :color="'green'" :lenght="6" />
+                        Registrar
+                    </ButtonBasic>
                 </form>
                 <div class="mt-4 text-sm text-gray-500 text-center dark:text-gray-400">
                     <p>
@@ -251,24 +223,113 @@
 </template>
 
 <script setup>
-//import BuildingIcon from '@/components/icons/BuildingIcon.vue';
-//import InputBasic from '@/components/content-components/inputs/InputBasic.vue';
-//import CheckboxBasic from '@/components/content-components/inputs/CheckboxBasic.vue';
-import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
-//import H1Title from '@/components/content-components/titles/H1Title.vue';
+    //import BuildingIcon from '@/components/icons/BuildingIcon.vue';
+    //import InputBasic from '@/components/content-components/inputs/InputBasic.vue';
+    //import CheckboxBasic from '@/components/content-components/inputs/CheckboxBasic.vue';
+    import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
+    //import H1Title from '@/components/content-components/titles/H1Title.vue';
+    import AlertMsgBasic from './content-components/messages/AlertMsgBasic.vue';
+    import LabelComponent from './content-components/inputs/LabelComponent.vue';
+    import InputBasic from './content-components/inputs/InputBasic.vue';
+    import SpinnerIcon from './icons/SpinnerIcon.vue';
 
-import { ref } from 'vue';
-import { useAuthStore } from '../stores/auth';
+    import { ref } from 'vue';
+    import { useAuthStore } from '../stores/auth';
 
-const authStore = useAuthStore();
+    const authStore = useAuthStore();
+    const errorClassBase = 'bg-red-50 border border-red-500 text-red-900 focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400';
 
-const form = ref({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-});
+    const responseErrors = ref('');
+    const listErrors = ref('');
+    const errCode = ref('');
 
+    const errorNameClass = ref('');
+    const errorEmailClass = ref('');
+    const errorPassClass = ref('');
+    const errorPassConfirmClass = ref('');
+    const disabledBtn = ref(false);
+
+    const form = ref({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+    });
+
+    //Validation
+    import { useField, useForm, validate } from 'vee-validate';
+    import { z } from 'zod';
+    import { toTypedSchema } from '@vee-validate/zod';
+    
+    const { errors, defineField, handleSubmit } = useForm({
+        validationSchema: toTypedSchema(
+            z.object({
+                name: z.string()
+                        .nonempty('This field cannot be empty!')
+                        .min(3, 'This field must contain at least 3 character(s)!')
+                        .max(120, 'This field must contain at most 120 character(s)!'),
+                email: z.string()
+                        .nonempty('This field cannot be empty!')
+                        .email('Insert a valid email!')
+                        .max(120, 'This field must contain at most 120 character(s)!'),
+                password: z.string()
+                        .nonempty('This field cannot be empty!')
+                        .min(8, 'This field must contain at least 8 character(s)!')
+                        .max(20, 'This field must contain at most 20 character(s)!'),
+                password_confirmation: z.string()
+                        .nonempty('This field cannot be empty!')
+                        .min(8, 'This field must contain at least 8 character(s)!')
+                        .max(20, 'This field must contain at most 20 character(s)!'),
+            }),
+        ),
+    });
+
+    const [name, nameAttrs] = defineField('name', { validateOnModelUpdate: false });
+    const [email, emailAttrs] = defineField('email', { validateOnModelUpdate: false });
+    const [password, passwordAttrs] = defineField('password', { validateOnModelUpdate: false });
+    const [password_confirmation, password_confirmationAttrs] = defineField('password_confirmation');
+
+    const doSubmit = handleSubmit(async (form) => {
+        errorEmailClass.value = '';
+        errorPassClass.value = '';
+
+        const isValid = validate();
+        disabledBtn.value = true;
+
+        if (isValid) {
+            await authStore.register(form);
+
+            if (authStore.errors) {
+                errCode.value = authStore.errorCode;
+                disabledBtn.value = false;
+
+                if (errCode.value === 401 || errCode.value === 400) {
+                    responseErrors.value = authStore.errorsMessage;
+                } else if (errCode.value === 422) {
+                    responseErrors.value = authStore.errorsMessage;
+                    listErrors.value = authStore.errors;
+
+                    if (authStore.errors.name) {
+                        errorNameClass.value = errorClassBase;
+                    }
+
+                    if (authStore.errors.email) {
+                        errorEmailClass.value = errorClassBase;
+                    }
+
+                    if (authStore.errors.password) {
+                        errorPassClass.value = errorClassBase;
+                    }
+
+                    if (authStore.errors.password_confirmation) {
+                        errorPassConfirmClass.value = errorClassBase;
+                    }
+                }
+            }
+        } else {
+            console.log('validate não funcionou');
+        }
+    });
 </script>
 
 <style scoped></style>

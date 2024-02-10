@@ -1,12 +1,10 @@
 import { createApp, markRaw } from 'vue';
 import { createPinia } from 'pinia';
+import { VueCookies } from 'vue-cookies';
 
 import App from './App.vue';
 import router from './router';
-import { VueCookies } from 'vue-cookies';
-
 import './plugins/axios.js';
-import './plugins/vee-validate.js';
 
 import './assets/main.css';
 

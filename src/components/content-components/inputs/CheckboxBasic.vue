@@ -20,8 +20,8 @@ defineProps(
         id: String,
         name: String,
         required: Boolean,
-        value: String
-    }
+        value: String,
+    },
 );
 
 </script>

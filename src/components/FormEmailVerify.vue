@@ -149,7 +149,7 @@
             <div class="max-w-md w-full p-6">
                 <h1 class="text-3xl font-semibold mb-6 text-black text-center dark:text-gray-300">Condomíno Vista do Sol</h1>
 
-                <h2 class="text-2xl font-semibold mb-6 text-gray-500 text-center dark:text-gray-300">Faça o seu login </h2>
+                <h2 class="text-2xl font-semibold mb-6 text-gray-500 text-center dark:text-gray-300">Valide o seu e-mail</h2>
 
                 <AlertMsgBasic v-if="responseErrors" :title="'Error!'" :color="'red'">
                     {{ responseErrors }}
@@ -157,126 +157,98 @@
 
                 <form validate-schema="validationSchema" class="space-y-4" @submit.prevent="doSubmit" novalidate>
                     <div>
-                        <LabelComponent for="email">Seu e-mail:</LabelComponent>
-                        <InputBasic v-model="email" v-bind="emailAttrs" type="email" id="email" name="email" required placeholder="email@email.com" :class="errorEmailClass" />
-                        <span v-if="errCode && errCode === 401" name="email" class="text-sm text-red-600 dark:text-red-800">{{ errors.email }}</span>
-                        <span v-else-if="errCode && errCode === 422" name="email" class="text-sm text-red-600 dark:text-red-800">
+                        <LabelComponent for="token">Token enviado para o seu e-mail: </LabelComponent>
+                        <InputBasic v-model="token" v-bind="tokenAttrs" type="text" id="token" name="token" required placeholder="xpto123change" :class="errorTokenClass" />
+                        <span v-if="errCode && (errCode === 401 || errCode === 400)" name="token" class="text-sm text-red-600 dark:text-red-800">{{ errors.token }}</span>
+                        <span v-else-if="errCode && errCode === 422" name="token" class="text-sm text-red-600 dark:text-red-800">
                             <ul>
-                                <li v-for="(errMail, index) in listErrors.email" :key="index">{{ errMail }}</li>
+                                <li v-for="(errToken, index) in listErrors.token" :key="index">{{ errToken }}</li>
                             </ul>
                         </span>
-                        <span v-else name="email" class="text-sm text-red-600 dark:text-red-800">{{ errors.email }}</span>
-                    </div>
-
-                    <div>
-                        <LabelComponent for="password">Sua senha:</LabelComponent>
-                        <InputBasic v-model="password" v-bind="passwordAttrs" type="password" id="password" name="password" required placeholder="••••••••" :class="errorPassClass" />
-                        <span v-if="errCode && errCode === 401" name="password" class="text-sm text-red-600 dark:text-red-800">{{ errors.password }}</span>
-                        <span v-else-if="errCode && errCode === 422" name="password" class="text-sm text-red-600 dark:text-red-800">
-                            <ul>
-                                <li v-for="(errPass, index) in listErrors.password" :key="index">{{ errPass }}</li>
-                            </ul>
-                        </span>
-                        <span v-else name="password" class="text-sm text-red-600 dark:text-red-800">{{ errors.password }}</span>
+                        <span v-else name="token" class="text-sm text-red-600 dark:text-red-800">{{ errors.token }}</span>
                     </div>
 
                     <ButtonBasic :disabled="disabledBtn" :type="'submit'" :color="'blue'">
-                        <SpinnerIcon v-if="disabledBtn" :color="'green'" :lenght="6" /> Login
+                        <SpinnerIcon v-if="disabledBtn" :color="'green'" :lenght="6" /> Validar
                     </ButtonBasic>
                 </form>
-
-                <div class="mt-4 text-sm text-gray-500 text-center dark:text-gray-400">
-                    <p>
-                        Esqueceu a senha? Clique
-                        <router-link :to="{ name: 'forgot-password' }" class="text-black hover:underline dark:text-gray-300">
-                            aqui
-                        </router-link>
-                    </p>
-                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import LabelComponent from './content-components/inputs/LabelComponent.vue';
-//import BuildingIcon from '@/components/icons/BuildingIcon.vue';
-import InputBasic from './content-components/inputs/InputBasic.vue';
-//import CheckboxBasic from '@/components/content-components/inputs/CheckboxBasic.vue';
-import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
-//import H1Title from '@/components/content-components/titles/H1Title.vue';
-import AlertMsgBasic from './content-components/messages/AlertMsgBasic.vue';
-import SpinnerIcon from './icons/SpinnerIcon.vue';
+    import AlertMsgBasic from './content-components/messages/AlertMsgBasic.vue';
+    import LabelComponent from './content-components/inputs/LabelComponent.vue';
+    import InputBasic from './content-components/inputs/InputBasic.vue';
+    import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
+    import SpinnerIcon from './icons/SpinnerIcon.vue';
 
-import { ref } from 'vue';
-import { useAuthStore } from '../stores/auth';
+    import { computed, ref } from 'vue';
+    import { useAuthStore } from '../stores/auth';
 
-const authStore = useAuthStore();
-const errorClassBase = 'bg-red-50 border border-red-500 text-red-900 focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400';
+    const authStore = useAuthStore();
+    const errorClassBase = 'bg-red-50 border border-red-500 text-red-900 focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400';
 
-const responseErrors = ref('');
-const listErrors = ref('');
-const errCode = ref('');
-const errorEmailClass = ref('');
-const errorPassClass = ref('');
-const disabledBtn = ref(false);
+    const responseErrors = ref('');
+    const listErrors = ref('');
+    const errCode = ref('');
+    const errorTokenClass = ref('');
+    const disabledBtn = ref(false);
 
-const form = ref({
-    email: '',
-    password: '',
-});
+    defineProps({
+        tokenVerify: String,
+    });
 
-//Validation
-import { useField, useForm, validate } from 'vee-validate';
-import { z } from 'zod';
-import { toTypedSchema } from '@vee-validate/zod';
+    //Validation
+    import { useForm, validate } from 'vee-validate';
+    import { z } from 'zod';
+    import { toTypedSchema } from '@vee-validate/zod';
 
-/*values,*/
-const { errors, defineField, handleSubmit } = useForm({
-    validationSchema: toTypedSchema(
-        z.object({
-            email: z.string().nonempty('This field cannot be empty!').email('Insert a valid email!'),
-            password: z.string().nonempty('This field cannot be empty!').min(8, 'This field must contain at least 8 character(s)!'),
-        }),
-    ),
-});
+    /*values,*/
+    const { errors, defineField, handleSubmit } = useForm({
+        validationSchema: toTypedSchema(
+            z.object({
+                token: z.string()
+                        .nonempty('This field cannot be empty!')
+                        .min(16, 'This field must contain at least 16 character(s)!')
+                        .max(255, 'This field must contain at most 255 character(s)!'),
+            }),
+        ),
+    });
 
-const [email, emailAttrs] = defineField('email', { validateOnModelUpdate: false });
-const [password, passwordAttrs] = defineField('password');
+    const [token, tokenAttrs] = defineField('token');
 
-const doSubmit = handleSubmit(async (form) => {
-    errorEmailClass.value = '';
-    errorPassClass.value = '';
+    const doSubmit = handleSubmit(async (form) => {
+        errorTokenClass.value = '';
 
-    const isValid = validate();
-    disabledBtn.value = true;
+        const isValid = validate();
+        disabledBtn.value = true;
 
-    if (isValid) {
-        await authStore.login(form);
+        if (isValid) {
+            await authStore.verifyEmail(form);
 
-        if (authStore.errors) {
-            errCode.value = authStore.errorCode;
-            disabledBtn.value = false;
+            if (authStore.errors) {
+                errCode.value = authStore.errorCode;
+                disabledBtn.value = false;
 
-            if (errCode.value === 401 || errCode.value === 400) {
-                responseErrors.value = authStore.errorsMessage;
-            } else if (errCode.value === 422) {
-                responseErrors.value = authStore.errorsMessage;
-                listErrors.value = authStore.errors;
+                if (errCode.value === 401 || errCode.value === 400) {
+                    responseErrors.value = authStore.errorsMessage;
+                } else if (errCode.value === 422) {
+                    responseErrors.value = authStore.errorsMessage;
+                    listErrors.value = authStore.errors;
 
-                if (authStore.errors.email) {
-                    errorEmailClass.value = errorClassBase;
-                }
-
-                if (authStore.errors.password) {
-                    errorPassClass.value = errorClassBase;
+                    if (authStore.errors.email) {
+                        errorTokenClass.value = errorClassBase;
+                    }
                 }
             }
+        } else {
+            console.log('validate não funcionou');
         }
-    } else {
-        console.log('validate não funcionou');
-    }
-});
+    });
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

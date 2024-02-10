@@ -12,14 +12,12 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
-defineProps(
+const props = defineProps(
     {
         id: String,
         msg: String,
-        title: String
-    }
+        title: String,
+    },
 );
 
 </script>

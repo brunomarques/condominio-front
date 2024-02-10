@@ -151,19 +151,26 @@
 
                 <h2 class="text-2xl font-semibold mb-6 text-gray-500 text-center dark:text-gray-300">Criar uma nova senha</h2>
 
-                <form action="#" method="POST" class="space-y-4" @submit.prevent="authStore.login(form)" novalidate>
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">E-mail</label>
-                        <input type="email" name="email" id="email"
-                            class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                            placeholder="email@email.com" required v-model="form.email">
-                        <div v-if="authStore.errors.email" class="text-xs text-red-600 dark:text-red-400 font-semibold">
-                            {{ authStore.errors.email[0] }}
-                        </div>
-                    </div>
-                    <!--InputBasic :type="'email'" :required="true" :label="'Seu e-mail:'" :id="'email'" :name="'email'" :placeholder="'email@email.com'" v-model="email" /-->
+                <AlertMsgBasic v-if="responseErrors" :title="'Error!'" :color="'red'">
+                    {{ responseErrors }}
+                </AlertMsgBasic>
 
-                    <ButtonBasic :type="'submit'" :text="'Enviar solicitação de troca de senha'" :color="'blue'" />
+                <form validate-schema="validationSchema" class="space-y-4" @submit.prevent="doSubmit" novalidate>
+                    <div>
+                        <LabelComponent for="email">Seu e-mail:</LabelComponent>
+                        <InputBasic v-model="email" v-bind="emailAttrs" type="email" id="email" name="email" required placeholder="email@email.com" :class="errorEmailClass" />
+                        <span v-if="errCode && errCode === 401" name="email" class="text-sm text-red-600 dark:text-red-800">{{ errors.email }}</span>
+                        <span v-else-if="errCode && errCode === 422" name="email" class="text-sm text-red-600 dark:text-red-800">
+                            <ul>
+                                <li v-for="(errMail, index) in listErrors.email" :key="index">{{ errMail }}</li>
+                            </ul>
+                        </span>
+                        <span v-else name="email" class="text-sm text-red-600 dark:text-red-800">{{ errors.email }}</span>
+                    </div>
+
+                    <ButtonBasic :type="'submit'" :color="'blue'">
+                        <SpinnerIcon v-if="disabledBtn" :color="'green'" :lenght="6" /> Enviar solicitação de troca de senha
+                    </ButtonBasic>
                 </form>
                 <div class="mt-4 text-sm text-gray-500 text-center dark:text-gray-400">
                     <p>
@@ -179,22 +186,68 @@
 </template>
 
 <script setup>
-//import BuildingIcon from '@/components/icons/BuildingIcon.vue';
-//import InputBasic from '@/components/content-components/inputs/InputBasic.vue';
-//import CheckboxBasic from '@/components/content-components/inputs/CheckboxBasic.vue';
-import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
-//import H1Title from '@/components/content-components/titles/H1Title.vue';
+    import AlertMsgBasic from './content-components/messages/AlertMsgBasic.vue';
+    import LabelComponent from './content-components/inputs/LabelComponent.vue';
+    import InputBasic from './content-components/inputs/InputBasic.vue';
+    import ButtonBasic from './content-components/buttons/ButtonBasic.vue';
+    import SpinnerIcon from './icons/SpinnerIcon.vue';
 
-import { ref } from 'vue';
-import { useAuthStore } from '../stores/auth';
+    import { ref } from 'vue';
+    import { useAuthStore } from '../stores/auth';
 
-const authStore = useAuthStore();
+    const authStore = useAuthStore();
+    const errorClassBase = 'bg-red-50 border border-red-500 text-red-900 focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400';
 
-const form = ref({
-    email: '',
-    password: '',
-});
+    const responseErrors = ref('');
+    const listErrors = ref('');
+    const errCode = ref('');
+    const errorEmailClass = ref('');
+    const disabledBtn = ref(false);
 
+    //Validation
+    import { useField, useForm, validate } from 'vee-validate';
+    import { z } from 'zod';
+    import { toTypedSchema } from '@vee-validate/zod';
+
+    /*values,*/
+    const { errors, defineField, handleSubmit } = useForm({
+        validationSchema: toTypedSchema(
+            z.object({
+                email: z.string().nonempty('This field cannot be empty!').email('Insert a valid email!'),
+            }),
+        ),
+    });
+
+    const [email, emailAttrs] = defineField('email');
+
+    const doSubmit = handleSubmit(async (form) => {
+        errorEmailClass.value = '';
+
+        const isValid = validate();
+        disabledBtn.value = true;
+
+        if (isValid) {
+            await authStore.forgotPassword(form.email);
+
+            if (authStore.errors) {
+                errCode.value = authStore.errorCode;
+                disabledBtn.value = false;
+
+                if (errCode.value === 401 || errCode.value === 400) {
+                    responseErrors.value = authStore.errorsMessage;
+                } else if (errCode.value === 422) {
+                    responseErrors.value = authStore.errorsMessage;
+                    listErrors.value = authStore.errors;
+
+                    if (authStore.errors.email) {
+                        errorEmailClass.value = errorClassBase;
+                    }
+                }
+            }
+        } else {
+            console.log('validate não funcionou');
+        }
+    });
 </script>
 
 <style scoped></style>

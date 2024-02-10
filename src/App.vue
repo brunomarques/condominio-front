@@ -14,21 +14,6 @@ onMounted(() => {
 
   //Tailwind Flowbite
   initFlowbite();
-
-  // Set a cookie
-  //$cookies.set('teste', 'valorrrr');
-
-  // Get a cookie
-  //console.log($cookies.get('teste'));
-
-  // Remove a cookie
-  //$cookies.remove('teste');
-
-  // Exist a cookie name
-  //console.log($cookies.isKey('teste'));
-
-  // Get All cookie name
-  //console.log($cookies.keys());
 });
 </script>
 
