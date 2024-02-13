@@ -54,20 +54,23 @@ export const useAuthStore = defineStore('auth', {
                 await axios.post('/login', {
                     email: data.email,
                     password: data.password,
-                }).then((response) => {
+                })
+                .then((response) => {
                     this.authUser = response?.data?.data;
                     this.authToken = response?.data?.access_token;
 
                     $cookies.set('_condominio_token', response?.data?.access_token);
 
                     this.router.push('dashboard');
-                }).catch((err) => {
+                })
+                .catch((err) => {
                     if (err?.response.status === 401) {
                         const responseError = err?.response?.data?.error;
 
                         this.authErrorMessage = messages[responseError];
                         this.authErrorCode = err?.response?.status;
-                    } else if (err?.response?.status === 422) {
+                    }
+                    else if (err?.response?.status === 422) {
                         this.authErrorCode = err?.response?.status;
                         this.authErrors = err?.response?.data?.errors;
                         this.authErrorMessage = err?.response?.data?.message;
@@ -101,16 +104,19 @@ export const useAuthStore = defineStore('auth', {
                     email: data.email,
                     password: data.password,
                     password_confirmation: data.password_confirmation,
-                }).then(async () => {
+                })
+                .then(async () => {
                     this.authRegistered = true;
                     this.router.push({ name: 'login' });
-                }).catch((err) => {
+                })
+                .catch((err) => {
                     if (err?.response.status === 401) {
                         const responseError = err?.response?.data?.error;
 
                         this.authErrorMessage = messages[responseError];
                         this.authErrorCode = err?.response?.status;
-                    } else if (err?.response?.status === 422) {
+                    }
+                    else if (err?.response?.status === 422) {
                         this.authErrorCode = err?.response?.status;
                         this.authErrors = err?.response?.data?.errors;
                         this.authErrorMessage = err?.response?.data?.message;
@@ -131,11 +137,13 @@ export const useAuthStore = defineStore('auth', {
                 //to JWT
                 await axios.post('/verify-email', {
                     token: data,
-                }).then(() => {
+                })
+                .then(() => {
                     this.authEmailVerified = true;
 
                     this.router.push({ name: 'login' });
-                }).catch((err) => {
+                })
+                .catch((err) => {
                     const status = err?.response?.status;
 
                     if (status === 401 || status === 400) {
@@ -143,7 +151,8 @@ export const useAuthStore = defineStore('auth', {
 
                         this.authErrorMessage = messages[responseError];
                         this.authErrorCode = err?.response?.status;
-                    } else if (err?.response?.status === 422) {
+                    }
+                    else if (err?.response?.status === 422) {
                         this.authErrorCode = err?.response?.status;
                         this.authErrors = err?.response?.data?.errors;
                         this.authErrorMessage = err?.response?.data?.message;
@@ -177,10 +186,12 @@ export const useAuthStore = defineStore('auth', {
             try {
                 await axios.post('/forgot-password', {
                     email: email,
-                }).then(() => {
+                })
+                .then(() => {
                     this.authUser = null;
                     this.router.push({ name: 'login' });
-                }).catch((err) => {
+                })
+                .catch((err) => {
                     const status = err?.response?.status;
 
                     if (status === 401 || status === 400) {
@@ -188,7 +199,8 @@ export const useAuthStore = defineStore('auth', {
 
                         this.authErrorMessage = messages[responseError];
                         this.authErrorCode = err?.response?.status;
-                    } else if (err?.response?.status === 422) {
+                    }
+                    else if (err?.response?.status === 422) {
                         this.authErrorCode = err?.response?.status;
                         this.authErrors = err?.response?.data?.errors;
                         this.authErrorMessage = err?.response?.data?.message;
@@ -210,16 +222,19 @@ export const useAuthStore = defineStore('auth', {
                     password: data.password,
                     password_confirmation: data.password_confirmation,
                     token: data.token,
-                }).then(async () => {
+                })
+                .then(async () => {
                     this.authPasswordChanged = true;
                     this.router.push({ name: 'login' });
-                }).catch((err) => {
+                })
+                .catch((err) => {
                     if (err?.response.status === 401) {
                         const responseError = err?.response?.data?.error;
 
                         this.authErrorMessage = messages[responseError];
                         this.authErrorCode = err?.response?.status;
-                    } else if (err?.response?.status === 422) {
+                    }
+                    else if (err?.response?.status === 422) {
                         this.authErrorCode = err?.response?.status;
                         this.authErrors = err?.response?.data?.errors;
                         this.authErrorMessage = err?.response?.data?.message;
