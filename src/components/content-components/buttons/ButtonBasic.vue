@@ -1,6 +1,6 @@
 <template>
     <button :type="type"
-        :class="`flex justify-center items-center gap-4 w-full bg-${color}-900 text-white p-2 rounded-md hover:bg-${color}-700 focus:outline-none focus:bg-${color}-600 dark:bg-${color}-700 dark:hover:bg-${color}-600 transition-colors duration-300 shadow-md hover:shadow-lg dark:hover:shadow-${color}-800`">
+        :class="`bg-${color}-500 dark:bg-${color}-600 hover:bg-${color}-600 dark:hover:bg-${color}-700 w-full py-3 rounded-xl text-white shadow-xl hover:shadow-inner focus:outline-none transition duration-500 ease-in-out  transform hover:-translate-x hover:scale-105`">
         <slot />
     </button>
 </template>

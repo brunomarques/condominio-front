@@ -1,13 +1,9 @@
 <template>
-    <div>
-        <FormNewPassword />
-    </div>
+    <FormNewPassword />
 </template>
 
 <script setup>
-    import FormNewPassword from '../components/FormNewPassword.vue';
+    import FormNewPassword from '../components/forms/FormNewPassword.vue';
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

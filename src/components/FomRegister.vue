@@ -233,7 +233,7 @@
     import InputBasic from './content-components/inputs/InputBasic.vue';
     import SpinnerIcon from './icons/SpinnerIcon.vue';
 
-    import { ref } from 'vue';
+    /*import { ref } from 'vue';
     import { useAuthStore } from '../stores/auth';
 
     const authStore = useAuthStore();
@@ -329,7 +329,7 @@
         } else {
             console.log('validate não funcionou');
         }
-    });
+    });*/
 </script>
 
 <style scoped></style>

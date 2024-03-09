@@ -1,25 +1,26 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios from '../plugins/axios';
 import messages from '../utils/messages.js';
+import cookie from '../services/cookie.js';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         authUser: null,
         authToken: null,
         authErrors: [],
-        authErrorMessage: null,
         authErrorCode: null,
         authRegistered: false,
+        authErrorMessage: null,
         authEmailVerified: false,
         authPasswordChanged: false,
     }),
     getters: {
         user: (state) => state.authUser,
-        errors: (state) => state.authErrors,
         token: (state) => state.authToken,
-        errorsMessage: (state) => state.authErrorMessage,
+        errors: (state) => state.authErrors,
         errorCode: (state) => state.authErrorCode,
         registered: (state) => state.authRegistered,
+        errorsMessage: (state) => state.authErrorMessage,
         emailVerified: (state) => state.authEmailVerified,
         passwordChanged: (state) => state.authPasswordChanged,
     },
@@ -59,22 +60,22 @@ export const useAuthStore = defineStore('auth', {
                     this.authUser = response?.data?.data;
                     this.authToken = response?.data?.access_token;
 
-                    $cookies.set('_condominio_token', response?.data?.access_token);
+                    cookie.setToken(response?.data?.access_token);
 
                     this.router.push('dashboard');
                 })
                 .catch((err) => {
-                    if (err?.response.status === 401) {
-                        const responseError = err?.response?.data?.error;
+                    // if (err?.response.status === 401) {
+                    //     const responseError = err?.response?.data?.error;
 
-                        this.authErrorMessage = messages[responseError];
-                        this.authErrorCode = err?.response?.status;
-                    }
-                    else if (err?.response?.status === 422) {
-                        this.authErrorCode = err?.response?.status;
-                        this.authErrors = err?.response?.data?.errors;
-                        this.authErrorMessage = err?.response?.data?.message;
-                    }
+                    //     this.authErrorMessage = messages[responseError];
+                    //     this.authErrorCode = err?.response?.status;
+                    // }
+                    // else if (err?.response?.status === 422) {
+                    //     this.authErrorCode = err?.response?.status;
+                    //     this.authErrors = err?.response?.data?.errors;
+                    //     this.authErrorMessage = err?.response?.data?.message;
+                    // }
                 });
                 //to sanctum
                 /*await axios.post('/login', {
@@ -87,6 +88,7 @@ export const useAuthStore = defineStore('auth', {
                     this.router.push('dashboard');
                 });*/
             } catch (err) {
+                console.log(err);
                 if (err.response.status === 422) {
                     this.authErrors = err.response.data.errors;
                 }
@@ -168,15 +170,22 @@ export const useAuthStore = defineStore('auth', {
         async logout() {
             //await this.getToken();
 
-            await axios.post('/logout')
-                .then(() => {
-                    $cookies.remove('_condominio_token');
+            try {
+                await axios.post('/logout')
+                    .then(() => {
+                        cookie.removeToken();
 
-                    this.authUser = null;
-                    this.authToken = null;
+                        this.authUser = null;
+                        this.authToken = null;
 
-                    this.router.push({ name: 'login' });
-                });
+                        this.router.push({ name: 'login' });
+                    })
+                    .catch((err) => {
+                        console.log('Error from route logout: '+err);
+                    });
+            } catch(err) {
+                console.log('Error form function logout: '+err);
+            }
 
         },
 
@@ -247,5 +256,10 @@ export const useAuthStore = defineStore('auth', {
             }
 
         },
+    },
+    //persist: true,
+    persist: {
+        storage: sessionStorage,
+        paths: ['authToken', 'authUser'],
     },
 });
