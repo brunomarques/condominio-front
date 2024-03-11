@@ -47,7 +47,7 @@
         email: string().email('Insira um e-mail válido!').required('Campo obrigatório!'),
     });
 
-    const { defineInputBinds, values, errorBag, handleSubmit } = useForm({
+    const { defineInputBinds, data, errorBag, handleSubmit } = useForm({
         validationSchema: schema,
     });
 
@@ -60,14 +60,14 @@
     const errorEmailClass = ref('');
     const disabledBtn = ref(false);
 
-    const doSubmit = handleSubmit(async (form) => {
+    const doSubmit = handleSubmit(async (data) => {
         errorEmailClass.value = '';
 
         const isValid = validate();
         disabledBtn.value = true;
 
         if (isValid) {
-            await authStore.login(form);
+            await authStore.forgotPassword(data.email);
 
             if (authStore.errors) {
                 errCode.value = authStore.errorCode;

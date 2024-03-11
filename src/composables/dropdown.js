@@ -15,7 +15,7 @@ export function useDropdown (targetEl, triggerEl, placement) {
         offsetDistance: 10,
         delay: 300,
         ignoreClickOutsideClass: false,
-        onHide: () => {
+        /*onHide: () => {
             console.log('dropdown has been hidden');
         },
         onShow: () => {
@@ -23,7 +23,7 @@ export function useDropdown (targetEl, triggerEl, placement) {
         },
         onToggle: () => {
             console.log('dropdown has been toggled');
-        },
+        },*/
     };
 
     // instance options object
