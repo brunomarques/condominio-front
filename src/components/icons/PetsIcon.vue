@@ -1,9 +1,9 @@
 <template>
-    <LuBuilding />
+    <PiDog />
 </template>
 
 <script setup>
-    import { LuBuilding } from 'vue3-icons/lu';
+    import { PiDog } from 'vue3-icons/pi';
 </script>
 
 <style scoped></style>

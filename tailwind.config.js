@@ -9,8 +9,9 @@ export default {
     theme: {
         extend: {},
         fontFamily: {
-            sans: ['Roboto', 'sans-serif'],
-            serif: ['Roboto Serif', 'serif'],
+          sans: ['Open Sans'],
+          serif: ['SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace', 'serif'],
+          body: ['Roboto', 'sans-serif'],
         },
     },
     plugins: [

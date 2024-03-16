@@ -1,9 +1,9 @@
 <template>
-    <LuBuilding />
+    <LuKeyboard />
 </template>
 
 <script setup>
-    import { LuBuilding } from 'vue3-icons/lu';
+    import { LuKeyboard } from 'vue3-icons/lu';
 </script>
 
 <style scoped></style>

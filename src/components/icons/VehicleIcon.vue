@@ -1,9 +1,9 @@
 <template>
-    <LuBuilding />
+    <LuCarFront />
 </template>
 
 <script setup>
-    import { LuBuilding } from 'vue3-icons/lu';
+    import { LuCarFront } from 'vue3-icons/lu';
 </script>
 
 <style scoped></style>

@@ -1,9 +1,9 @@
 <template>
-    <LuBuilding />
+    <LuGrid3X3 />
 </template>
 
 <script setup>
-    import { LuBuilding } from 'vue3-icons/lu';
+    import { LuGrid3X3 } from 'vue3-icons/lu';
 </script>
 
 <style scoped></style>

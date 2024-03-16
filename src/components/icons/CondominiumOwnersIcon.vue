@@ -1,9 +1,9 @@
 <template>
-    <LuBuilding />
+    <LuUsers />
 </template>
 
 <script setup>
-    import { LuBuilding } from 'vue3-icons/lu';
+    import { LuUsers } from 'vue3-icons/lu';
 </script>
 
 <style scoped></style>

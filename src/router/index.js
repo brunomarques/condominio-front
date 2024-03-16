@@ -69,17 +69,26 @@ const router = createRouter({
             component: InternalLayout,
             children: [
                 {
-                    path: '/register',
-                    name: 'register',
-                    component: () => import('../views/RegisterView.vue'),
-                    beforeEnter: Guard.redirectIfAuthenticated,
+                    path: '/dashboard',
+                    name: 'dashboard',
+                    component: () => import('../views/DashboardView.vue'),
+                    beforeEnter: Guard.redirectIfNotAuthenticated,
                     meta: {
-                        requireAuth: false,
+                        requireAuth: true,
                     },
                 },
                 {
-                    path: '/dashboard',
-                    name: 'dashboard',
+                    path: '/condominos',
+                    name: 'condominium-owners',
+                    component: () => import('../views/CondominiumOwnerView.vue'),
+                    beforeEnter: Guard.redirectIfNotAuthenticated,
+                    meta: {
+                        requireAuth: true,
+                    },
+                },
+                {
+                    path: '/condominios',
+                    name: 'condominios',
                     component: () => import('../views/DashboardView.vue'),
                     beforeEnter: Guard.redirectIfNotAuthenticated,
                     meta: {

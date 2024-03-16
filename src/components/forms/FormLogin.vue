@@ -32,7 +32,7 @@
         </div>
 
         <div class="mt-7 mb-3">
-            <ButtonBasic :disabled="disabledBtn" :type="'submit'" :color="'blue'">
+            <ButtonBasic :class="'w-full'" :disabled="disabledBtn" :type="'submit'" :color="'blue'">
                 <SpinnerIcon v-if="disabledBtn" :color="'green'" :lenght="6" /> Entrar
             </ButtonBasic>
         </div>
